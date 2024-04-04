@@ -12,12 +12,12 @@ from fast_zero.security import (
 )
 
 router = APIRouter(prefix='/users', tags=['users'])
-Session = Annotated[Session, Depends(get_session)]
+Session1 = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
 @router.post('/', response_model=UserPublic, status_code=201)
-def create_user(user: UserSchema, session: Session):
+def create_user(user: UserSchema, session: Session1):
     db_user = session.scalar(select(User).where(User.email == user.email))
     if db_user:
         raise HTTPException(status_code=400, detail='Email already registered')
@@ -37,7 +37,7 @@ def create_user(user: UserSchema, session: Session):
 
 @router.get('/', response_model=UserList)
 def read_users(
-    session: Session, skip: int = 0, limit: int = 100,
+    session: Session1, skip: int = 0, limit: int = 100,
 ):
     users = session.scalars(select(User).offset(skip).limit(limit)).all()
     return {'users': users}
@@ -47,11 +47,16 @@ def read_users(
 def update_user(
     user_id: int,
     user: UserSchema,
-    session: Session,
+    session: Session1,
     current_user: CurrentUser,
 ):
     if current_user.id != user_id:
         raise HTTPException(status_code=400, detail='Not enough permissions')
+
+    db_user = session.scalar(select(User).where(User.id == user_id))
+
+    if db_user is None:
+        raise HTTPException(status_code=404, detail='User not found')
 
     current_user.username = user.username
     current_user.password = get_password_hash(user.password)
@@ -65,7 +70,7 @@ def update_user(
 @router.delete('/{user_id}', response_model=Message)
 def delete_user(
     user_id: int,
-    session: Session,
+    session: Session1,
     current_user: CurrentUser,
 ):
     if current_user.id != user_id:

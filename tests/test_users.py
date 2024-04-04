@@ -18,18 +18,18 @@ def test_create_user(client):
     }
 
 
-# def test_create_username_registered(client, user):
-#     user_schema = UserPublic.model_validate(user).model_dump()
-#     response = client.post(
-#         '/users/',
-#         json={
-#             'username': 'username',
-#             'email': user_schema['email'],
-#             'password': user.clean_password,
-#         },
-#     )
-#     assert response.status_code == 400
-#     assert response.json() == {'detail': 'Email already registered'}
+def test_create_username_registered(client, user):
+    user_schema = UserPublic.model_validate(user).model_dump()
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'username',
+            'email': user_schema['email'],
+            'password': user.clean_password,
+        },
+    )
+    assert response.status_code == 400
+    assert response.json() == {'detail': 'Email already registered'}
 
 
 def test_read_users(client):
@@ -69,9 +69,9 @@ def test_update_user(client, user, token):
     }
 
 
-def test_update_user_inexistent(client, token):
+def test_update_user_with_wrong_user(client, other_user, token):
     response = client.put(
-        '/users/2',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
         json={
             'username': 'bob',
@@ -92,9 +92,9 @@ def test_delete_user(client, user, token):
     assert response.json() == {'message': 'User deleted'}
 
 
-def test_delete_user_inexistent(client, token):
+def test_delete_user_with_wrong_user(client, other_user, token):
     response = client.delete(
-        '/users/2', headers={'Authorization': f'Bearer {token}'}
+        f'/users/{other_user.id}', headers={'Authorization': f'Bearer {token}'}
     )
 
     assert response.status_code == 400
