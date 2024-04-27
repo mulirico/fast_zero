@@ -1,15 +1,13 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from typing import Annotated
 
 from fast_zero.database import get_session
 from fast_zero.models import User
 from fast_zero.schemas import Message, UserList, UserPublic, UserSchema
-from fast_zero.security import (
-    get_current_user,
-    get_password_hash,
-)
+from fast_zero.security import get_current_user, get_password_hash
 
 router = APIRouter(prefix='/users', tags=['users'])
 Session1 = Annotated[Session, Depends(get_session)]
@@ -37,7 +35,9 @@ def create_user(user: UserSchema, session: Session1):
 
 @router.get('/', response_model=UserList)
 def read_users(
-    session: Session1, skip: int = 0, limit: int = 100,
+    session: Session1,
+    skip: int = 0,
+    limit: int = 100,
 ):
     users = session.scalars(select(User).offset(skip).limit(limit)).all()
     return {'users': users}

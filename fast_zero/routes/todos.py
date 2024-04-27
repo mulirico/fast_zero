@@ -1,13 +1,19 @@
-from fastapi import APIRouter, Depends, Query, HTTPException
 from typing import Annotated
-from sqlalchemy.orm import Session
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from fast_zero.database import get_session
 from fast_zero.models import Todo, User
-from fast_zero.schemas import TodoSchema, TodoPublic, TodoList, TodoUpdate, Message
+from fast_zero.schemas import (
+    Message,
+    TodoList,
+    TodoPublic,
+    TodoSchema,
+    TodoUpdate,
+)
 from fast_zero.security import get_current_user
-
 
 router = APIRouter()
 
@@ -64,7 +70,7 @@ def list_todos(
 
 @router.patch('/{todo_id}', response_model=TodoPublic)
 def patch_todo(
-    todo_id: int, 
+    todo_id: int,
     user: CurrentUser,
     todo: TodoUpdate,
     session: Session = Depends(get_session),
@@ -98,7 +104,7 @@ def delete_todo(
 
     if not todo:
         raise HTTPException(status_code=404, detail='Task not found.')
-    
+
     session.delete(todo)
     session.commit()
 
