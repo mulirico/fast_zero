@@ -7,7 +7,7 @@ jobs:
 
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      SECRET_KEY: ${{  secrets.SECRET_KEY }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALGORITHM: ${{ secrets.ALGORITHM }}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
 
@@ -22,19 +22,19 @@ jobs:
           - 5432:5432
 
     steps:
-      - name: Copiar os arquivos do repositório
+      - name: Copia os arquivos do repositório
         uses: actions/checkout@v3
 
       - name: Instalar o python
         uses: actions/setup-python@v5
-        with: 
+        with:
           python-version: '3.11.7'
 
       - name: Instalar o poetry
         run: pipx install poetry
 
-      - name: Instalar as dependências
+      - name: Instalar dependências
         run: poetry install
-      
+
       - name: Executar testes
         run: poetry run task test
