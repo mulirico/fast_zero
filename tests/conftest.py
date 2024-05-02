@@ -7,8 +7,8 @@ from sqlalchemy.orm import sessionmaker
 from fast_zero.app import app
 from fast_zero.database import get_session
 from fast_zero.models import Base, User
-from fast_zero.settings import Settings
 from fast_zero.security import get_password_hash
+from fast_zero.settings import Settings
 
 
 @pytest.fixture
@@ -31,7 +31,7 @@ def session():
     with Session() as session:
         yield Session()
         session.rollback()
-        
+
     Base.metadata.drop_all(engine)
 
 
