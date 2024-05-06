@@ -1,7 +1,7 @@
 services:
   fastzero_database:
     image: postgres
-    volumes: 
+    volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: app_user
@@ -12,7 +12,6 @@ services:
 
   fastzero_app:
     image: fastzero_app
-    entrypoint: ./entrypoint.sh
     build:
       context: .
       dockerfile: Dockerfile
