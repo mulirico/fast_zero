@@ -346,6 +346,9 @@ files = [
     {file = "coverage-7.5.1.tar.gz", hash = "sha256:54de9ef3a9da981f7af93eafde4ede199e0846cd819eb27c88e2b712aae9708c"},
 ]
 
+[package.dependencies]
+tomli = {version = "*", optional = true, markers = "python_full_version <= \"3.11.0a6\" and extra == \"toml\""}
+
 [package.extras]
 toml = ["tomli"]
 
@@ -1526,5 +1529,5 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 
 [metadata]
 lock-version = "2.0"
-python-versions = "3.11.7"
-content-hash = "f5a8dbdf09bd2f0be954616c58a428b0823465b3f729046fd5b7d9c5bcd16594"
+python-versions = "3.11.*"
+content-hash = "cf14071ea48ba1b9762181db2c153a8e8e50f4e30424a1d732c6cf43ca074d88"
