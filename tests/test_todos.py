@@ -134,7 +134,7 @@ def test_patch_todo(session, client, user, token):
 
 
 def test_delete_todo(session, client, user, token):
-    todo = TodoFactory(id=1, user_id=user.id)
+    todo = TodoFactory(user_id=user.id)
 
     session.add(todo)
     session.commit()
@@ -142,6 +142,7 @@ def test_delete_todo(session, client, user, token):
     response = client.delete(
         f'/todos/{todo.id}', headers={'Authorization': f'Bearer {token}'}
     )
+
     assert response.status_code == 200
     assert response.json() == {
         'message': 'Task has been deleted successfully.'
@@ -150,8 +151,7 @@ def test_delete_todo(session, client, user, token):
 
 def test_delete_todo_error(client, token):
     response = client.delete(
-        f'/todos/{10}',
-        headers={'Authorization': f'Bearer {token}'},
+        f'/todos/{10}', headers={'Authorization': f'Bearer {token}'}
     )
 
     assert response.status_code == 404
