@@ -1,7 +1,6 @@
-from datetime import datetime
 from enum import Enum
 
-from sqlalchemy import ForeignKey, func
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
@@ -33,7 +32,6 @@ class User:
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
     email: Mapped[str] = mapped_column(unique=True)
-
 
     todos: Mapped[list['Todo']] = relationship(
         init=False, back_populates='user', cascade='all, delete-orphan'
